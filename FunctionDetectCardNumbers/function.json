@@ -6,8 +6,8 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": [ "get" ],
-      "route": "collections/"
+      "methods": [ "post" ],
+      "route": "collections/{collection_id}/detect-numbers"
     },
     {
       "type": "http",
