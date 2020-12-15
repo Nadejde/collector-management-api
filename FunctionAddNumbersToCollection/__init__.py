@@ -8,12 +8,9 @@ def get_numbers_to_add(collection, input_numbers):
     for number in collection['numbers']:
         if number['number'] in input_numbers:
             logging.info(number)
-            if number['number'] in numbers_to_add:
-                numbers_to_add[number['number']]['count'] += 1
-            else:
-                numbers_to_add[number['number']] = number
-                numbers_to_add[number['number']]['count'] = 1
-                numbers_to_add[number['number']]['collection'] = collection['name']
+            numbers_to_add[number['number']] = number
+            numbers_to_add[number['number']]['count'] = input_numbers.count(number['number'])
+            numbers_to_add[number['number']]['collection'] = collection['name']
     
     return numbers_to_add
 
