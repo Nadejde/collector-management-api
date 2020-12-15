@@ -21,14 +21,14 @@ def validate_365_2021(text):
            and (text[-1].isdigit() or text[-1] == 'b') \
            and text != '365'
 
-def load_from_json(json_data, validator=validate_default):
+def load_from_json(json_data, collection_numbers):
     numbers = []
     texts = []
     lines = json_data['analyzeResult']['readResults'][0]['lines']
     for line in lines:
         texts.append(line['text'])
         text = line['text'].replace(' ', '')
-        if validator(text) and line['words'][0]['confidence'] > 0.9:
+        if (text in collection_numbers) and line['words'][0]['confidence'] > 0.9:
             numbers.append(text.rstrip('b'))
 
     numbers.sort()
@@ -57,7 +57,7 @@ def read_result(location):
     resp.raise_for_status()
     return resp.json()
 
-def process_image(image_bytes, expected_count=60, collection_id=None):
+def process_image(image_bytes, collection_numbers,  expected_count=60):
     result_url = post_media(image_bytes)
     time.sleep(1)
     result_json = read_result(result_url)
@@ -65,10 +65,7 @@ def process_image(image_bytes, expected_count=60, collection_id=None):
         time.sleep(1)
         result_json = read_result(result_url)
     
-    validator = validate_default
-    if (collection_id == "Panini - Football 2020"):
-        validator = validate_football_2020 
-    numbers = load_from_json(result_json, validator)
+    numbers = load_from_json(result_json, collection_numbers)
     print("expected count " + str(expected_count) + ", actual count " + str(len(numbers)))
     print(numbers)
     return numbers

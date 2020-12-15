@@ -7,7 +7,7 @@
       "direction": "in",
       "name": "req",
       "methods": [ "post" ],
-      "route": "collections/{collection_id}/detect-numbers"
+      "route": "collections/{collection_id}/numbers/detect"
     },
     {
       "type": "http",

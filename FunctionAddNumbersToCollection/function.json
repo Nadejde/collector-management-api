@@ -6,7 +6,7 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "route": "collections/numbers",
+      "route": "collections/{collection_id}/numbers",
       "methods": [ "post" ]
     },
     {

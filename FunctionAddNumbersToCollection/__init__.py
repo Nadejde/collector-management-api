@@ -18,10 +18,10 @@ def get_numbers_to_add(collection, input_numbers):
     return numbers_to_add
 
 
-def add_number_to_items_container(container, collection_name, numbers):
+def add_number_to_items_container(container, collection_id, numbers):
     items = container.query_items(
         query='SELECT * FROM items r WHERE r.collection = @collection',
-        parameters=[dict(name="@collection", value=collection_name)],
+        parameters=[dict(name="@collection", value=collection_id)],
         enable_cross_partition_query=True)
     for item in items:
         if item['number'] in numbers:
@@ -44,15 +44,15 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     except ValueError:
         pass
     else:
-        collection_name = req_body.get('name').replace('/','-')
+        collection_id = req.route_params.get('collection_id')
         numbers = req_body.get('numbers')
         collection = collections.query_items(
-            query='SELECT * FROM collections r WHERE r.name = @name',
-            parameters=[dict(name="@name", value=collection_name)],
+            query='SELECT * FROM collections r WHERE r.id = @id',
+            parameters=[dict(name="@id", value=collection_id)],
             enable_cross_partition_query=True).next()
         
         numbers_to_add = get_numbers_to_add(collection, numbers)
-        add_number_to_items_container(items, collection_name, numbers_to_add)
+        add_number_to_items_container(items, collection_id, numbers_to_add)
             
             
     return func.HttpResponse("OK", status_code=200)
