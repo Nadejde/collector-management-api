@@ -10,7 +10,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     items_container = database.get_items_container()
     collection_id = req.route_params.get('collection_id')
     req_body = req.get_json()
-    numbers = req_body.get('numbers', [])
+    numbers = req_body.get('numbers', "")
+    numbers = numbers.replace(' ',',')
+    numbers = numbers.replace('\n',',')
+    numbers = numbers.split(',')
 
     items = list(items_container.query_items(
         query='SELECT r.number, r.text, r.count, r.id FROM items r WHERE r.collection = @collection',
