@@ -27,11 +27,11 @@ def load_from_json(json_data, collection_numbers):
     lines = json_data['analyzeResult']['readResults'][0]['lines']
     for line in lines:
         texts.append(line['text'])
-        text = line['text'].replace(' ', '')
-        if (text in collection_numbers) and line['words'][0]['confidence'] > 0.9:
-            numbers.append(text.rstrip('b'))
+        for word in line['words']:
+            text = word['text'].replace(' ', '').replace(',', '')
+            if (text in collection_numbers):
+                numbers.append(text.rstrip('b'))
 
-    numbers.sort()
     return numbers
 
 
