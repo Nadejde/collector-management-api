@@ -38,6 +38,16 @@ def add_number_to_items_container(container, collection_id, numbers):
             item['count'] = item['count'] + numbers[item['number']]['count']
             container.replace_item(item=item, body=item)
 
+def remove_numbers_from_items_container(container, collection_id, numbers):
+    items = container.query_items(
+        query='SELECT * FROM items r WHERE r.collection = @collection',
+        parameters=[dict(name="@collection", value=collection_id)],
+        enable_cross_partition_query=True)
+    for item in items:
+        if item['number'] in numbers:
+            item['count'] = item['count'] - numbers[item['number']]['count']
+            container.replace_item(item=item, body=item)
+
 def clear_collection(container, collection_id):
     items = container.query_items(
         query='SELECT * FROM items r WHERE r.collection = @collection',
@@ -63,6 +73,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     else:
         collection_id = req.route_params.get('collection_id')
         numbers = req_body.get('numbers', [])
+        remove_numbers = req_body.get('remove_numbers', [])
         numbers_csv = req_body.get('numbers_csv','')
         clear_colection = req_body.get('clear', False)
         collection = collections.query_items(
@@ -77,9 +88,14 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             numbers_to_add = get_numbers_to_add(collection, numbers)
             add_number_to_items_container(items , collection_id, numbers_to_add)
 
+        if(len(remove_numbers) > 0):
+            numbers_to_remove = get_numbers_to_add(collection, remove_numbers)
+            remove_numbers_from_items_container(items , collection_id, numbers_to_remove)
+
         if(numbers_csv != ''):
             numbers_to_add = get_numbers_to_add_from_csv(collection, numbers_csv)
             add_number_to_items_container(items , collection_id, numbers_to_add)
+
             
             
             

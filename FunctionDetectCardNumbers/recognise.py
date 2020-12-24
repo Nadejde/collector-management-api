@@ -28,10 +28,24 @@ def load_from_json(json_data, collection_numbers):
     for line in lines:
         texts.append(line['text'])
         for word in line['words']:
-            text = word['text'].replace(' ', '').replace(',', '')
+            text = word['text'].replace(' ', '').replace(',', '').rstrip('b')
             if (text in collection_numbers):
-                numbers.append(text.rstrip('b'))
+                numbers.append(text)
 
+    #try a different strategy for stickers with multiple words on the same line
+    if(len(numbers) == 0):
+        for line in lines:
+            text = line['text'].replace(' ', '')
+            if (text in collection_numbers):
+                numbers.append(text)
+
+    #try a different strategy for collections split in multiple lines
+    if(len(numbers) == 0): 
+        for i in range(len(lines) - 1):
+            text = lines[i]['text'] + lines[i+1]['text']
+            if (text in collection_numbers):
+                numbers.append(text)
+                
     return numbers
 
 
