@@ -22,7 +22,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         filestream.seek(0)
         new_numbers = recognise.process_image(filestream, collection_numbers=collection_numbers)
         numbers = numbers + new_numbers
-
+        
     numbers.sort()
 
     return func.HttpResponse(json.dumps(numbers), status_code=200)

@@ -13,6 +13,22 @@ def get_numbers_to_add(collection, input_numbers):
     
     return numbers_to_add
 
+def get_numbers_to_add_with_prefix(collection, input):
+    input_numbers = []
+    numbers_to_add = {}
+    for line in input.splitlines():
+        prefix = line.split(' ')[0]
+        for number in (line.split(' ')[1]).split(','):
+            input_numbers.append(prefix + number)
+
+    for number in collection['numbers']:
+        if number['number'] in input_numbers:
+            numbers_to_add[number['number']] = number
+            numbers_to_add[number['number']]['count'] = input_numbers.count(number['number'])
+            numbers_to_add[number['number']]['collection'] = collection['name']
+    
+    return numbers_to_add
+
 def get_numbers_to_add_from_csv(collection, csv):
     input_numbers = {}
     for line in csv.splitlines():
@@ -75,6 +91,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         numbers = req_body.get('numbers', [])
         remove_numbers = req_body.get('remove_numbers', [])
         numbers_csv = req_body.get('numbers_csv','')
+        numbers_prefix = req_body.get('numbers_prefix','')
         clear_colection = req_body.get('clear', False)
         collection = collections.query_items(
             query='SELECT * FROM collections r WHERE r.id = @id',
@@ -96,8 +113,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             numbers_to_add = get_numbers_to_add_from_csv(collection, numbers_csv)
             add_number_to_items_container(items , collection_id, numbers_to_add)
 
-            
-            
-            
+        if(numbers_prefix != ''):
+            numbers_to_add = get_numbers_to_add_with_prefix(collection, numbers_prefix)
+            add_number_to_items_container(items , collection_id, numbers_to_add)
+                       
     return func.HttpResponse("OK", status_code=200)
  

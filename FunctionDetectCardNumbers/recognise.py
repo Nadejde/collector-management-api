@@ -1,7 +1,9 @@
 import json
+import io
 import os
 import requests
 import time
+#from PIL import ImageEnhance, Image
 
 OCR_KEY = '2d2e22ea11664d498e934e19cd90a64b'
 ANALYZE_URL = 'https://stickers-recognition.cognitiveservices.azure.com/vision/v3.0/read/analyze'
@@ -72,6 +74,20 @@ def read_result(location):
     return resp.json()
 
 def process_image(image_bytes, collection_numbers,  expected_count=60):
+    #im = Image.open(image_bytes)
+    #enhancer = ImageEnhance.Sharpness(im)
+    #im = enhancer.enhance(0.5)
+    #enhancer = ImageEnhance.Brightness(im)
+    #im = enhancer.enhance(1)
+    #enhancer = ImageEnhance.Contrast(im)
+    #im = enhancer.enhance(0.8)
+    #enhancer = ImageEnhance.Sharpness(im)
+    #im = enhancer.enhance(1)
+
+    #img_byte_arr = io.BytesIO()
+    #im.save(img_byte_arr, format='JPEG')
+    #img_byte_arr = img_byte_arr.getvalue()
+
     result_url = post_media(image_bytes)
     time.sleep(1)
     result_json = read_result(result_url)
