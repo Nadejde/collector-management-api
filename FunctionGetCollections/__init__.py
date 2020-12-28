@@ -9,7 +9,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     collections = database.get_collections_container()
 
     items = list(collections.query_items(
-        query='SELECT items.id, items.name, items.type, items.year, items.manufacturer FROM items',
+        query='SELECT items.id, items.name, items.type, items.year, items.manufacturer, items.ebay FROM items',
         enable_cross_partition_query=True))
 
     logging.info(items)
