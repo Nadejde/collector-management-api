@@ -1,4 +1,4 @@
-def load(name, numbers, collection_type, year, manufacturer):
+def load(name, numbers, collection_type, year, manufacturer, ebay):
     number_array = []
     for line in numbers.splitlines():
         number = (line.strip().split('.')[0]).replace(' ', '')
@@ -11,5 +11,6 @@ def load(name, numbers, collection_type, year, manufacturer):
         'numbers': number_array,
         'type': collection_type,
         'year': year,
-        'manufacturer': manufacturer
+        'manufacturer': manufacturer,
+        'ebay': ebay
     }

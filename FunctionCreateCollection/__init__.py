@@ -18,8 +18,9 @@ def main(req: func.HttpRequest, doc: func.Out[func.Document]) -> func.HttpRespon
     manufacturer = req_body.get('manufacturer')
     collection_type = req_body.get('type')
     year = req_body.get('year')
+    ebay = req_body.get('ebay')
 
-    collection = load_collection.load(name, numbers, collection_type, year, manufacturer)
+    collection = load_collection.load(name, numbers, collection_type, year, manufacturer, ebay)
     collections.create_item(collection)
 
     for number in collection['numbers']:
