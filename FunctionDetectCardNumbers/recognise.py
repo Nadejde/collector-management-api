@@ -30,7 +30,7 @@ def load_from_json(json_data, collection_numbers):
     for line in lines:
         texts.append(line['text'])
         for word in line['words']:
-            text = word['text'].replace(' ', '').replace(',', '').rstrip('b')
+            text = word['text'].replace(' ', '').replace(',', '').rstrip('b').rstrip('B')
             if (text in collection_numbers):
                 numbers.append(text)
 
